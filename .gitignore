@@ -1,0 +1,5 @@
+# dirs
+renderer/target/
+
+# files
+**/.DS_Store
