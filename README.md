@@ -19,6 +19,16 @@ brew install rustup-init
 rustup-init
 ```
 
+- On Windows:
+
+```shell
+scoop install main/rustup
+# was not in PATH after installation:
+rustup-init 
+```
+
+- All:
+
 ```shell
 cargo install wasm-pack
 ```
