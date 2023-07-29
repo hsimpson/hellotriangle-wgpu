@@ -1,0 +1,2 @@
+[workspace]
+members = ["./renderer", "./frontend/native-rust"]

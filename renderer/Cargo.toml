@@ -12,10 +12,8 @@ crate-type = ["cdylib", "rlib"]
 cfg-if = "1"
 env_logger = "0.10.0"
 log = "0.4.19"
-pollster = "0.3.0"
 raw-window-handle = "0.5.2"
 wgpu = "0.17.0"
-winit = "0.28.6"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 console_error_panic_hook = "0.1.7"

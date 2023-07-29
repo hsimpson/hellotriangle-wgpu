@@ -1,4 +1,6 @@
 # dirs
+target/
+frontend/native-rust/target/
 renderer/target/
 
 # files

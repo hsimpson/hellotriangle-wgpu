@@ -1,9 +1,7 @@
-use crate::renderer::{Renderer, Window};
+use crate::{renderer::Renderer, window_like::WindowLike};
 
-use web_sys::HtmlCanvasElement;
-
-#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
+use web_sys::HtmlCanvasElement;
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub struct WASMRenderer {
@@ -14,9 +12,13 @@ pub struct WASMRenderer {
 impl WASMRenderer {
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
     pub async fn new(canvas: HtmlCanvasElement) -> Self {
-        let window = Window::from_canvas(&canvas);
+        const RAW_ID: u32 = 1;
+        let window = WindowLike::create_for_web(RAW_ID);
+        canvas
+            .set_attribute("data-raw-handle", &RAW_ID.to_string())
+            .unwrap();
 
-        let renderer = Renderer::new(window, canvas.width(), canvas.height()).await;
+        let renderer = Renderer::new(&window, canvas.width(), canvas.height()).await;
 
         Self { renderer }
     }

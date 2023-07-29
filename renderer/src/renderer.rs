@@ -1,45 +1,5 @@
 use std::iter;
 
-use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WebDisplayHandle, WebWindowHandle};
-use web_sys::HtmlCanvasElement;
-
-pub struct Window {
-    pub window_handle: RawWindowHandle,
-    pub display_handle: RawDisplayHandle,
-}
-
-unsafe impl raw_window_handle::HasRawWindowHandle for Window {
-    fn raw_window_handle(&self) -> raw_window_handle::RawWindowHandle {
-        return self.window_handle;
-    }
-}
-
-unsafe impl raw_window_handle::HasRawDisplayHandle for Window {
-    fn raw_display_handle(&self) -> raw_window_handle::RawDisplayHandle {
-        return self.display_handle;
-    }
-}
-
-impl Window {
-    pub fn from_canvas(canvas: &HtmlCanvasElement) -> Self {
-        const RAW_ID: u32 = 1;
-        canvas
-            .set_attribute("data-raw-handle", &RAW_ID.to_string())
-            .unwrap();
-        let mut web_window_handle = WebWindowHandle::empty();
-        web_window_handle.id = RAW_ID;
-        let window_handle = RawWindowHandle::Web(web_window_handle);
-
-        let web_display_handle = WebDisplayHandle::empty();
-        let display_handle = RawDisplayHandle::Web(web_display_handle);
-
-        Self {
-            window_handle,
-            display_handle,
-        }
-    }
-}
-
 pub struct Renderer {
     // pub window: Window,
     surface: wgpu::Surface,
@@ -49,7 +9,13 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(window: Window, width: u32, height: u32) -> Self {
+    pub async fn new<
+        W: raw_window_handle::HasRawWindowHandle + raw_window_handle::HasRawDisplayHandle,
+    >(
+        window: &W,
+        width: u32,
+        height: u32,
+    ) -> Self {
         // init logger
         cfg_if::cfg_if! {
             if #[cfg(target_arch = "wasm32")] {
